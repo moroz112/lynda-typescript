@@ -1,9 +1,9 @@
-import {action, autorun, computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import { injectable } from 'inversify';
 import Todo from './Todo';
 
 @injectable()
-class TodoStore {
+export class TodoStore {
     @observable todos: Array<Todo> = [];
     @observable filter: string = '';
 
@@ -24,12 +24,3 @@ class TodoStore {
     }
 
 }
-
-var store = new TodoStore;
-
-export default store;
-
-autorun(() => {
-    console.log(store.filter);
-    console.log(store.todos[0]);
-});

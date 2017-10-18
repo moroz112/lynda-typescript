@@ -2,6 +2,9 @@ import * as React from 'react';
 import './App.css';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
+import { resolve } from "inversify-react";
+import { TodoStore } from "./TodoStore";
+
 
 export interface ITodo {
     id: number;
@@ -19,20 +22,23 @@ export interface IAppProps {
     store: IStore
 }
 @observer
-class App extends React.Component<IAppProps, {}> {
+class App extends React.Component<{}, {}> {
+    @resolve
+    private todoStore: TodoStore;
+
     filter(e:any) {
-        this.props.store.filter = e.target.value;
+        this.todoStore.filter = e.target.value;
     }
     addTodo(e:any) {
         if(e.which === 13) {
-            this.props.store.addItem(e.target.value)
+            this.todoStore.addItem(e.target.value)
         }
     }
     delete(id:number) {
-        this.props.store.deleteItem(id)
+        this.todoStore.deleteItem(id)
     }
   render() {
-    const { filter, filteredTodos } = this.props.store;
+    const { filter, filteredTodos } = this.todoStore;
     return (
       <div className="App">
           <div>Filter</div>
