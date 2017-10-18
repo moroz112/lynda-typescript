@@ -1,19 +1,54 @@
 import * as React from 'react';
 import './App.css';
+import { observer } from 'mobx-react';
+import DevTools from 'mobx-react-devtools';
 
-const logo = require('./logo.svg');
-
-class App extends React.Component {
+export interface ITodo {
+    id: number;
+    text: string;
+    completed: boolean;
+}
+export interface IStore {
+    todos: ITodo[];
+    filteredTodos: ITodo[];
+    filter: string,
+    deleteItem: any,
+    addItem: any
+}
+export interface IAppProps {
+    store: IStore
+}
+@observer
+class App extends React.Component<IAppProps, {}> {
+    filter(e:any) {
+        this.props.store.filter = e.target.value;
+    }
+    addTodo(e:any) {
+        if(e.which === 13) {
+            this.props.store.addItem(e.target.value)
+        }
+    }
+    delete(id:number) {
+        this.props.store.deleteItem(id)
+    }
   render() {
+    const { filter, filteredTodos } = this.props.store;
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+          <div>Filter</div>
+          <input value={ filter } onChange={this.filter.bind(this)}/>
+          <div>Add new</div>
+          <input onKeyPress={this.addTodo.bind(this)}/>
+          <ul>
+              {filteredTodos.map((todo, index) =>
+                  <li key={index}>
+                      {todo.text}
+                      <button onClick={this.delete.bind(this, todo.id)}>Delete Item</button>
+                  </li>
+
+              )}
+          </ul>
+          <DevTools/>
       </div>
     );
   }
