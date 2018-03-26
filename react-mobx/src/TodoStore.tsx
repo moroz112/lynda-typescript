@@ -22,5 +22,9 @@ export class TodoStore {
     addItem(value: string) {
         this.todos.push(new Todo(value));
     }
+    @action('async changes')
+    asyncChanges() {
+        this.todos[0].text = 'olololo';
+    }
 
 }

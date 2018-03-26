@@ -1,4 +1,4 @@
-import {ContainerModule, interfaces} from "inversify";
+import { ContainerModule, interfaces } from 'inversify';
 import 'reflect-metadata';
 import { TodoStore } from './TodoStore';
 

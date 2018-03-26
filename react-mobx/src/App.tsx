@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 import { resolve } from "inversify-react";
 import { TodoStore } from "./TodoStore";
+import { TodoItem } from './todoItem';
 
 
 export interface ITodo {
@@ -14,12 +15,12 @@ export interface ITodo {
 export interface IStore {
     todos: ITodo[];
     filteredTodos: ITodo[];
-    filter: string,
-    deleteItem: any,
-    addItem: any
+    filter: string;
+    deleteItem: any;
+    addItem: any;
 }
 export interface IAppProps {
-    store: IStore
+    store: IStore;
 }
 @observer
 class App extends React.Component<{}, {}> {
@@ -34,11 +35,14 @@ class App extends React.Component<{}, {}> {
             this.todoStore.addItem(e.target.value)
         }
     }
-    delete(id:number) {
-        this.todoStore.deleteItem(id)
+    asyncChanges() {
+        this.todoStore.asyncChanges();
+    }
+    deleteItem(id: number) {
+        this.todoStore.deleteItem(id);
     }
   render() {
-    const { filter, filteredTodos } = this.todoStore;
+    const { filter, filteredTodos} = this.todoStore;
     return (
       <div className="App">
           <div>Filter</div>
@@ -47,10 +51,12 @@ class App extends React.Component<{}, {}> {
           <input onKeyPress={this.addTodo.bind(this)}/>
           <ul>
               {filteredTodos.map((todo, index) =>
-                  <li key={index}>
-                      {todo.text}
-                      <button onClick={this.delete.bind(this, todo.id)}>Delete Item</button>
-                  </li>
+                  <TodoItem key={index}
+                            id={todo.id}
+                            text={todo.text}
+                            asyncChanges={this.asyncChanges.bind(this)}
+                            deleteItem={this.deleteItem.bind(this)}
+                  />
 
               )}
           </ul>
